@@ -1,0 +1,11 @@
+^perglm\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^src/\.gitkeep$
+^tests/testthat/\.gitkeep$
+^\.positai$
+^\.claude$

@@ -1,0 +1,18 @@
+url: https://ziangniu6.github.io/perglm/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [reference]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/ZiangNiu6/perglm/
+
+reference:
+- title: Package
+  contents:
+  - perglm-package
