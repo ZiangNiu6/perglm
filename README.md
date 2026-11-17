@@ -10,12 +10,15 @@ studentized score tests for generalized linear models.
 
 ## Development status
 
-This repository currently contains the package skeleton. Statistical methods,
-permutation engines, and usage examples will be added in subsequent development.
+Internal numerical helpers provide cached weighted projections, exposure
+residualization, and empirical studentization of score contributions. Rcpp
+kernels support scalar and batch studentization, as well as combined exposure
+residualization and score calculation, alongside an R reference implementation.
+The public GLM score-test interface and permutation engines are under development.
 
-The layout follows [spacrt](https://github.com/Katsevich-Lab/spacrt), with R code in
-`R/`, native code reserved for `src/`, documentation in `man/`, tests in `tests/`,
-and pkgdown configuration for a future website in `docs/`.
+The package layout includes R code in `R/`, native code reserved for `src/`,
+documentation in `man/`, tests in `tests/`, and pkgdown configuration for a future
+website in `docs/`.
 
 ## Reference
 

@@ -7,11 +7,25 @@
 \title{Permutation Score Tests for Generalized Linear Models}
 \description{
 Package infrastructure for permutation-calibrated, empirically studentized
-score tests in generalized linear models. Statistical methods are not yet
-implemented in this development version.
+score tests in generalized linear models. Internal helpers provide weighted
+exposure residualization and empirical studentization, with R reference
+calculations and compiled scalar and batch kernels. The public testing
+interface is under development.
 }
 \references{
 Ai, J. and Niu, Z. (2026). Conditional independence testing through marginal
 permutation. \doi{10.48550/arXiv.2611.03255}.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ZiangNiu6/perglm}
+  \item Report bugs at \url{https://github.com/ZiangNiu6/perglm/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Ziang Niu \email{ziangniu@upenn.edu}
+
 }
 \keyword{internal}

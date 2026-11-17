@@ -5,7 +5,7 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^src/\.gitkeep$
+^benchmarks$
 ^tests/testthat/\.gitkeep$
 ^\.positai$
 ^\.claude$
