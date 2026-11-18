@@ -10,11 +10,16 @@ studentized score tests for generalized linear models.
 
 ## Development status
 
-Internal numerical helpers provide cached weighted projections, exposure
-residualization, and empirical studentization of score contributions. Rcpp
-kernels support scalar and batch studentization, as well as combined exposure
-residualization and score calculation, alongside an R reference implementation.
-The public GLM score-test interface and permutation engines are under development.
+Internal helpers fit null GLMs and prepare their working score residuals,
+weights, and cached projections. Supported families are Gaussian, Bernoulli,
+Poisson, Gamma, inverse Gaussian, and negative binomial, including fixed offsets.
+Model observations must be complete, with unit prior weights and a full-rank
+nuisance design containing an intercept.
+
+Rcpp kernels support scalar and batch studentization, as well as combined
+exposure residualization and score calculation, alongside an R reference
+implementation. The public GLM score-test interface and permutation engines are
+under development.
 
 The package layout includes R code in `R/`, native code reserved for `src/`,
 documentation in `man/`, tests in `tests/`, and pkgdown configuration for a future

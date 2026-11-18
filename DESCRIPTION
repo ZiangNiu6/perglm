@@ -8,7 +8,8 @@ Description:
     Package infrastructure for permutation-calibrated, empirically studentized
     score tests in generalized linear models, following Ai and Niu (2026)
     <doi:10.48550/arXiv.2611.03255>. This development version provides internal
-    numerical helpers; the public testing interface is under development.
+    null-model fitting, score preparation, and numerical helpers; the public
+    testing interface is under development.
 URL: https://github.com/ZiangNiu6/perglm
 BugReports: https://github.com/ZiangNiu6/perglm/issues
 License: GPL (>= 3)
@@ -17,7 +18,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: R (>= 4.1.0)
 Imports:
-    Rcpp (>= 1.0.0)
+    MASS,
+    Rcpp (>= 1.0.0),
+    stats
 LinkingTo:
     Rcpp
 Suggests:
