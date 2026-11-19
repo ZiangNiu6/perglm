@@ -18,8 +18,54 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-**perglm** is being developed to provide permutation-calibrated, empirically
-studentized score tests for generalized linear models.
+**perglm** provides permutation-calibrated, empirically studentized score tests
+for an exposure in generalized linear models.
+
+## Quick start
+
+Supply the nuisance-only null model as the formula, and pass the exposure
+separately as a numeric vector. The result is a standard R `htest` object.
+
+```{r quick-start, eval=FALSE}
+library(perglm)
+
+set.seed(42)
+dat <- data.frame(z1 = rnorm(120), z2 = rnorm(120),
+                  x = rbinom(120, 1, 0.3))
+dat$y <- rpois(120, exp(0.3 + 0.2 * dat$z1 - 0.1 * dat$z2 + 0.2 * dat$x))
+
+set.seed(2026)
+result <- perglm_test(
+  y ~ z1 + z2,
+  data = dat,
+  exposure = dat$x,
+  family = poisson(),
+  B = 999L
+)
+result
+result$p.value
+```
+
+The default alternative is `"two.sided"`; `"greater"` and `"less"` refer to
+the exposure coefficient on the link scale. Set `keep_statistics = TRUE` to
+retain the sampled scores in `result$permuted_statistics`. See `?perglm_test`
+for supported families, assumptions, and fitting controls.
+
+## Validation
+
+The [validation report](validation/results/report.html) records a reproducible
+study of 22,000 datasets, with 499 permutations per successful test. Across 12
+regular Gaussian and Poisson null scenarios, rejection rates at the 5% level
+ranged from 3.9% to 5.6%; all pointwise 95% binomial intervals included 5%.
+The study also records power, variance misspecification, and failures with rare
+exposures. Scripts, seeds, raw results, and exact small-sample checks are in
+`validation/`.
+
+Null preparation checks Bernoulli nuisance designs for separation and Gaussian
+residuals for numerical resolution. These checks run once per null fit and
+reject unsupported cases before permutations. The validation report includes
+regressions for the separation and exact-fit cases found in the initial audit,
+alongside valid offset models and small but numerically resolved noise.
 
 ## Development status
 
@@ -43,10 +89,11 @@ implementation. Three additional internal helpers now provide:
 
 Each shuffle recomputes exposure residuals and empirical score variance.
 Nonidentifiable exposures and undefined scores stop calibration without a
-p-value; no draws are discarded or redrawn. The public GLM score-test interface
-is under development.
+p-value; no draws are discarded or redrawn. The exported `perglm_test()` function
+connects null fitting and calibration and returns the test result with null-fit
+diagnostics.
 
-The package layout includes R code in `R/`, native code reserved for `src/`,
+The package layout includes R code in `R/`, native code in `src/`,
 documentation in `man/`, tests in `tests/`, and pkgdown configuration for a future
 website in `docs/`.
 

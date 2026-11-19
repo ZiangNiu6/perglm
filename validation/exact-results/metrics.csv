@@ -1,0 +1,12 @@
+"check","value","passed"
+"balanced_allocations",70,TRUE
+"distinct_signed_group_differences",70,TRUE
+"distinct_absolute_group_differences",35,TRUE
+"observed_score_scaled_error",2.22044604925031e-16,TRUE
+"reference_orbit_p_mismatches",0,TRUE
+"public_orbit_p_mismatches",0,TRUE
+"exact_rejection_fraction_violations",0,TRUE
+"mc_score_scaled_error",2.22044604925031e-16,TRUE
+"mc_p_value_mismatches",0,TRUE
+"mc_rng_mismatches",0,TRUE
+"mc_unmapped_runs",0,TRUE

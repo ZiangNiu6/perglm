@@ -13,6 +13,9 @@ navbar:
       href: https://github.com/ZiangNiu6/perglm/
 
 reference:
+- title: Testing
+  contents:
+  - perglm_test
 - title: Package
   contents:
   - perglm-package

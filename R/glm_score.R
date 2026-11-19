@@ -15,6 +15,8 @@
 #' The returned diagnostics include the maximum normalized nuisance score,
 #' `abs(crossprod(z[, j], epsilon)) / (norm(z[, j]) * norm(epsilon))`.
 #' This is recorded rather than used as an additional convergence cutoff.
+#' Bernoulli separation and Gaussian numerical residual resolution are checked
+#' once during preparation; their results are included in the diagnostics.
 #' Preparation does not inspect an exposure. The testing layer must separately
 #' check that the exposure has residual variation after nuisance adjustment.
 #'
@@ -117,13 +119,28 @@ prepare_glm_score <- function(fit, tol = 1e-7) {
     stop("Binomial responses must be Bernoulli observations coded as zero or one.",
          call. = FALSE)
   }
+  if (working$name == "binomial" && (all(y == 0) || all(y == 1))) {
+    stop("Bernoulli null models require both zero and one outcomes for a finite intercept estimate.",
+         call. = FALSE)
+  }
   if (working$name %in% c("poisson", "negative.binomial") &&
       any(y < 0 | y != floor(y))) {
     stop("Poisson and negative-binomial responses must be nonnegative integer counts.",
          call. = FALSE)
   }
+  if (working$name %in% c("poisson", "negative.binomial") && all(y == 0)) {
+    stop("Count null models require at least one positive outcome for a finite intercept estimate.",
+         call. = FALSE)
+  }
   if (working$name %in% c("Gamma", "inverse.gaussian") && any(y <= 0)) {
     stop("Gamma and inverse-Gaussian responses must be strictly positive.",
+         call. = FALSE)
+  }
+  # An intercept fits a common response exactly when the offset is constant.
+  # glm() can leave roundoff-sized residuals instead of exact zeros, yielding
+  # spurious studentized scores. Varying offsets can prevent this exact fit.
+  if (all(y == y[1L]) && all(offset == offset[1L])) {
+    stop("Score contributions must have positive empirical variance; a constant response with a constant offset has none.",
          call. = FALSE)
   }
   if (!isTRUE(family$validmu(mu)) || !isTRUE(family$valideta(eta))) {
@@ -144,6 +161,17 @@ prepare_glm_score <- function(fit, tol = 1e-7) {
       !glm_numeric_vector(variance, n) || any(variance <= 0)) {
     stop("Working link derivatives must be finite and nonzero, and variances positive.",
          call. = FALSE)
+  }
+  separation_checked <- FALSE
+  gaussian_residual_check <- NULL
+  if (working$name == "binomial") {
+    check_glm_separation(z, y, offset, family)
+    separation_checked <- TRUE
+  }
+  if (working$name == "gaussian") {
+    gaussian_residual_check <- gaussian_fit_diagnostics(
+      y, mu, z, fit$coefficients, offset, derivative
+    )
   }
   score_residuals <- (y - mu) * (derivative / variance)
   working_weights <- (derivative / sqrt(variance))^2
@@ -176,7 +204,9 @@ prepare_glm_score <- function(fit, tol = 1e-7) {
     nobs = n,
     row_names = rows,
     diagnostics = list(converged = TRUE, iterations = fit$iter,
-                       max_score_correlation = score_error)
+                       max_score_correlation = score_error,
+                       separation_checked = separation_checked,
+                       gaussian_residual_check = gaussian_residual_check)
   ), class = "perglm_glm_score")
 }
 

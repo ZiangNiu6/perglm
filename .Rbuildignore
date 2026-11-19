@@ -6,6 +6,7 @@
 ^docs$
 ^pkgdown$
 ^benchmarks$
+^validation$
 ^tests/testthat/\.gitkeep$
 ^\.positai$
 ^\.claude$

@@ -1,0 +1,10 @@
+"alternative","alpha","group_rejection_fraction","reference_rejection_fraction","public_rejection_fraction","all_at_most_alpha"
+"greater",0.05,0.0428571428571429,0.0428571428571429,0.0428571428571429,TRUE
+"greater",0.1,0.1,0.1,0.1,TRUE
+"greater",0.2,0.2,0.2,0.2,TRUE
+"less",0.05,0.0428571428571429,0.0428571428571429,0.0428571428571429,TRUE
+"less",0.1,0.1,0.1,0.1,TRUE
+"less",0.2,0.2,0.2,0.2,TRUE
+"two.sided",0.05,0.0285714285714286,0.0285714285714286,0.0285714285714286,TRUE
+"two.sided",0.1,0.0857142857142857,0.0857142857142857,0.0857142857142857,TRUE
+"two.sided",0.2,0.2,0.2,0.2,TRUE

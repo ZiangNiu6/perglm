@@ -1,0 +1,32 @@
+Installed package: /private/tmp/perglm-guards-lib/perglm
+Package version: 0.0.0.9000
+RNG kinds: Mersenne-Twister, Inversion, Rejection
+Public permutation seed: 17; B: 9; maxit recorded in CSV.
+Diagnostic GLM uses the same family, formula, observations, and controls.
+scorediag is the public diagnostic when available; otherwise computed independently.
+R version 4.4.1 Patched (2024-06-25 r86831)
+Platform: aarch64-apple-darwin20
+Running under: macOS 15.7.3
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: America/New_York
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base
+
+other attached packages:
+[1] perglm_0.0.0.9000
+
+loaded via a namespace (and not attached):
+ [1] MASS_7.3-65              compiler_4.4.1           backports_1.5.0
+ [4] tools_4.4.1              ROI.plugin.lpsolve_1.0-2 Rcpp_1.1.1
+ [7] slam_0.1-53              checkmate_2.3.2          numDeriv_2016.8-1.1
+[10] detectseparation_0.4.0   registry_0.5-1           lpSolveAPI_5.5.2.0-17.15
+[13] ROI_1.0-2
