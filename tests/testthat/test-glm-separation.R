@@ -19,12 +19,13 @@ test_that("complete and quasi separation fail before permutation sampling", {
       dat <- .separation_fixture(kind)
       set.seed(17)
       before <- .Random.seed
-      # Bounded-domain links can fail during fitting before the separation
-      # guard. Either route must prevent inference from a noninterior fit.
+      # Separated IRLS fits can lose weighted rank; bounded-domain links can
+      # also fail before the separation guard. Either early fitting errors or
+      # the guard must prevent inference from a noninterior fit.
       expect_error(suppressWarnings(perglm_test(y ~ z, dat, dat$x,
         family = stats::binomial(link), B = 9L,
         control = list(maxit = 200L))),
-        "separation|finite|interior|converg|valid")
+        "separation|finite|interior|converg|valid|singular fit encountered")
       expect_identical(.Random.seed, before, info = paste(link, kind))
     }
   }
@@ -85,7 +86,8 @@ test_that("finite varying offsets do not remove an actual separating direction",
     before <- .Random.seed
     expect_error(suppressWarnings(perglm_test(y ~ z + offset(off), dat, dat$x,
       family = stats::binomial(link), B = 9L,
-      control = list(maxit = 200L))), "separation|finite|interior|converg|valid")
+      control = list(maxit = 200L))),
+      "separation|finite|interior|converg|valid|singular fit encountered")
     expect_identical(.Random.seed, before, info = link)
   }
 })
