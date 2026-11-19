@@ -48,31 +48,6 @@ Read the [rendered getting-started tutorial](https://ziangniu6.github.io/perglm/
 on the package website. Its [R Markdown source](https://github.com/ZiangNiu6/perglm/blob/main/vignettes/getting-started.Rmd)
 is in the source repository.
 
-## Validation
-
-The [validation report](https://github.com/ZiangNiu6/perglm/blob/main/validation/results/report.html) records a reproducible
-study of 22,000 datasets, with 499 permutations per successful test. Across 12
-regular Gaussian and Poisson null scenarios, rejection rates at the 5% level
-ranged from 3.9% to 5.6%; all pointwise 95% binomial intervals included 5%.
-The study also records power, variance misspecification, and failures with rare
-exposures. Scripts, seeds, raw results, and exact small-sample checks are in
-`validation/`.
-
-Repository links, including the full validation artifacts, require access to
-the private source repository. The website publishes the package documentation
-and tutorial.
-
-The saved validation report records implementation checkpoint
-[`27801a8`](https://github.com/ZiangNiu6/perglm/commit/27801a8).
-Reanalyze the saved results from that checkout, or rerun the validation scripts
-to record a fresh source snapshot after further changes.
-
-Null preparation checks Bernoulli nuisance designs for separation and Gaussian
-residuals for numerical resolution. These checks run once per null fit and
-reject unsupported cases before permutations. The validation report includes
-regressions for the separation and exact-fit cases found in the initial audit,
-alongside valid offset models and small but numerically resolved noise.
-
 ## Development status
 
 Internal helpers fit null GLMs and prepare their working score residuals,
