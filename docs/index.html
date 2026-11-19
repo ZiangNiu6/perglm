@@ -63,10 +63,29 @@
 <!-- badges: end -->
 <p><strong>perglm</strong> provides permutation-calibrated, empirically studentized score tests for an exposure in generalized linear models.</p>
 <div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>perglm requires R 4.1.0 or later. Install the GitHub version with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span> <span class="co"># Run once if remotes is not installed</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ZiangNiu6/perglm"</span><span class="op">)</span></span></code></pre></div>
+<p>Installing from GitHub compiles the package’s C++ code. Set up the build tools for your platform before installing:</p>
+<ul>
+<li>
+<strong>Windows:</strong> <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> matching your R version.</li>
+<li>
+<strong>macOS:</strong> Xcode Command Line Tools and the matching compiler/runtime tools described in the <a href="https://mac.r-project.org/tools/" class="external-link">R for macOS tools guide</a>.</li>
+<li>
+<strong>Linux:</strong> R development headers and a C++ compiler, typically provided by your distribution’s R development tools.</li>
+</ul>
+<p>Dependencies are installed automatically. While the repository is private, GitHub authentication and repository access are required; see the <a href="https://remotes.r-lib.org/reference/install_github.html#arguments" class="external-link">remotes authentication instructions</a>.</p>
+<p>The default GitHub installation skips local vignettes. The <a href="https://ziangniu6.github.io/perglm/articles/getting-started.html">online getting-started tutorial</a> is available without building them.</p>
+</div>
+<div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>Supply the nuisance-only null model as the formula, and pass the exposure separately as a numeric vector. The result is a standard R <code>htest</code> object.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ZiangNiu6/perglm" class="external-link">perglm</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
@@ -85,8 +104,8 @@
 <span><span class="va">result</span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="va">p.value</span></span></code></pre></div>
 <p>The default alternative is <code>"two.sided"</code>; <code>"greater"</code> and <code>"less"</code> refer to the exposure coefficient on the link scale. Set <code>keep_statistics = TRUE</code> to retain the sampled scores in <code>result$permuted_statistics</code>. See <code><a href="reference/perglm_test.html">?perglm_test</a></code> for supported families, assumptions, and fitting controls.</p>
-<p>The getting-started vignette walks through this example and its output:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>If you installed a build that includes local vignettes, open the walkthrough from R with:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"getting-started"</span>, package <span class="op">=</span> <span class="st">"perglm"</span><span class="op">)</span></span></code></pre></div>
 <p>Read the <a href="https://ziangniu6.github.io/perglm/articles/getting-started.html">rendered getting-started tutorial</a> on the package website. Its <a href="https://github.com/ZiangNiu6/perglm/blob/main/vignettes/getting-started.Rmd" class="external-link">R Markdown source</a> is in the source repository.</p>
 </div>

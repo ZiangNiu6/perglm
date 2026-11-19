@@ -8,6 +8,33 @@
 **perglm** provides permutation-calibrated, empirically studentized score tests
 for an exposure in generalized linear models.
 
+## Installation
+
+perglm requires R 4.1.0 or later. Install the GitHub version with:
+
+```r
+install.packages("remotes") # Run once if remotes is not installed
+remotes::install_github("ZiangNiu6/perglm")
+```
+
+Installing from GitHub compiles the package's C++ code. Set up the build tools
+for your platform before installing:
+
+- **Windows:** [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+  matching your R version.
+- **macOS:** Xcode Command Line Tools and the matching compiler/runtime tools
+  described in the [R for macOS tools guide](https://mac.r-project.org/tools/).
+- **Linux:** R development headers and a C++ compiler, typically provided by
+  your distribution's R development tools.
+
+Dependencies are installed automatically. While the repository is private,
+GitHub authentication and repository access are required; see the
+[remotes authentication instructions](https://remotes.r-lib.org/reference/install_github.html#arguments).
+
+The default GitHub installation skips local vignettes. The
+[online getting-started tutorial](https://ziangniu6.github.io/perglm/articles/getting-started.html)
+is available without building them.
+
 ## Quick start
 
 Supply the nuisance-only null model as the formula, and pass the exposure
@@ -38,7 +65,8 @@ the exposure coefficient on the link scale. Set `keep_statistics = TRUE` to
 retain the sampled scores in `result$permuted_statistics`. See `?perglm_test`
 for supported families, assumptions, and fitting controls.
 
-The getting-started vignette walks through this example and its output:
+If you installed a build that includes local vignettes, open the walkthrough
+from R with:
 
 ```r
 vignette("getting-started", package = "perglm")
