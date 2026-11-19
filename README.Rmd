@@ -57,17 +57,23 @@ The getting-started vignette walks through this example and its output:
 vignette("getting-started", package = "perglm")
 ```
 
-Its source is in [`vignettes/getting-started.Rmd`](vignettes/getting-started.Rmd).
+Read the [rendered getting-started tutorial](https://ziangniu6.github.io/perglm/articles/getting-started.html)
+on the package website. Its [R Markdown source](https://github.com/ZiangNiu6/perglm/blob/main/vignettes/getting-started.Rmd)
+is in the source repository.
 
 ## Validation
 
-The [validation report](validation/results/report.html) records a reproducible
+The [validation report](https://github.com/ZiangNiu6/perglm/blob/main/validation/results/report.html) records a reproducible
 study of 22,000 datasets, with 499 permutations per successful test. Across 12
 regular Gaussian and Poisson null scenarios, rejection rates at the 5% level
 ranged from 3.9% to 5.6%; all pointwise 95% binomial intervals included 5%.
 The study also records power, variance misspecification, and failures with rare
 exposures. Scripts, seeds, raw results, and exact small-sample checks are in
 `validation/`.
+
+Repository links, including the full validation artifacts, require access to
+the private source repository. The website publishes the package documentation
+and tutorial.
 
 The saved validation report records implementation checkpoint
 [`27801a8`](https://github.com/ZiangNiu6/perglm/commit/27801a8).

@@ -11,7 +11,7 @@ Description:
     uses cached score quantities and compiled numerical kernels for fixed-budget
     permutation calibration. Supports Gaussian, Bernoulli, Poisson, Gamma,
     inverse Gaussian, and negative-binomial working models.
-URL: https://github.com/ZiangNiu6/perglm
+URL: https://ziangniu6.github.io/perglm/, https://github.com/ZiangNiu6/perglm
 BugReports: https://github.com/ZiangNiu6/perglm/issues
 License: GPL (>= 3)
 Encoding: UTF-8
