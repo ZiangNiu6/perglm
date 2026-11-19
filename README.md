@@ -48,36 +48,6 @@ Read the [rendered getting-started tutorial](https://ziangniu6.github.io/perglm/
 on the package website. Its [R Markdown source](https://github.com/ZiangNiu6/perglm/blob/main/vignettes/getting-started.Rmd)
 is in the source repository.
 
-## Development status
-
-Internal helpers fit null GLMs and prepare their working score residuals,
-weights, and cached projections. Supported families are Gaussian, Bernoulli,
-Poisson, Gamma, inverse Gaussian, and negative binomial, including fixed offsets.
-Model observations must be complete, with unit prior weights and a full-rank
-nuisance design containing an intercept.
-
-Rcpp kernels support scalar and batch studentization, as well as combined
-exposure residualization and score calculation, alongside an R reference
-implementation. Three additional internal helpers now provide:
-
-- `glm_score_statistic()`: the observed score, with exposure alignment and
-  residual-identifiability checks.
-- `permutation_p_value()`: inclusive one- or two-sided tail comparisons with
-  the plus-one correction.
-- `calibrate_glm_permutation()`: fixed-budget label permutation using the
-  cached null fit and bounded Rcpp batches. `set.seed()` controls the draws;
-  retaining the permuted statistics is optional.
-
-Each shuffle recomputes exposure residuals and empirical score variance.
-Nonidentifiable exposures and undefined scores stop calibration without a
-p-value; no draws are discarded or redrawn. The exported `perglm_test()` function
-connects null fitting and calibration and returns the test result with null-fit
-diagnostics.
-
-The package layout includes R code in `R/`, native code in `src/`,
-documentation in `man/`, tests in `tests/`, and pkgdown configuration for a future
-website in `docs/`.
-
 ## Reference
 
 Ai, J. and Niu, Z. (2026). *Conditional independence testing through marginal

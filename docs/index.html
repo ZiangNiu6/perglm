@@ -91,22 +91,6 @@
 <p>Read the <a href="https://ziangniu6.github.io/perglm/articles/getting-started.html">rendered getting-started tutorial</a> on the package website. Its <a href="https://github.com/ZiangNiu6/perglm/blob/main/vignettes/getting-started.Rmd" class="external-link">R Markdown source</a> is in the source repository.</p>
 </div>
 <div class="section level2">
-<h2 id="development-status">Development status<a class="anchor" aria-label="anchor" href="#development-status"></a>
-</h2>
-<p>Internal helpers fit null GLMs and prepare their working score residuals, weights, and cached projections. Supported families are Gaussian, Bernoulli, Poisson, Gamma, inverse Gaussian, and negative binomial, including fixed offsets. Model observations must be complete, with unit prior weights and a full-rank nuisance design containing an intercept.</p>
-<p>Rcpp kernels support scalar and batch studentization, as well as combined exposure residualization and score calculation, alongside an R reference implementation. Three additional internal helpers now provide:</p>
-<ul>
-<li>
-<code>glm_score_statistic()</code>: the observed score, with exposure alignment and residual-identifiability checks.</li>
-<li>
-<code>permutation_p_value()</code>: inclusive one- or two-sided tail comparisons with the plus-one correction.</li>
-<li>
-<code>calibrate_glm_permutation()</code>: fixed-budget label permutation using the cached null fit and bounded Rcpp batches. <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> controls the draws; retaining the permuted statistics is optional.</li>
-</ul>
-<p>Each shuffle recomputes exposure residuals and empirical score variance. Nonidentifiable exposures and undefined scores stop calibration without a p-value; no draws are discarded or redrawn. The exported <code><a href="reference/perglm_test.html">perglm_test()</a></code> function connects null fitting and calibration and returns the test result with null-fit diagnostics.</p>
-<p>The package layout includes R code in <code>R/</code>, native code in <code>src/</code>, documentation in <code>man/</code>, tests in <code>tests/</code>, and pkgdown configuration for a future website in <code>docs/</code>.</p>
-</div>
-<div class="section level2">
 <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
 <p>Ai, J. and Niu, Z. (2026). <em>Conditional independence testing through marginal permutation</em>. <a href="https://arxiv.org/abs/2611.03255" class="external-link">arXiv:2611.03255</a>.</p>
