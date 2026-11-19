@@ -18,7 +18,7 @@ bool is_real_numeric(SEXP value) {
   if (TYPEOF(value) != REALSXP && TYPEOF(value) != INTSXP) {
     return false;
   }
-  if (OBJECT(value)) {
+  if (Rf_isObject(value)) {
     Rcpp::Function is_numeric = Rcpp::Environment::base_env()["is.numeric"];
     return Rcpp::as<bool>(is_numeric(value));
   }
