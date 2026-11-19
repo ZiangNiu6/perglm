@@ -1,0 +1,120 @@
+---
+title: "Getting started with perglm"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with perglm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(perglm)
+```
+
+## Fit the null model and test an exposure
+
+`perglm_test()` tests an exposure contribution to a conditional mean using a
+GLM score calibrated by marginal exposure permutations. Supply the response and
+nuisance covariates in the formula, and supply the exposure separately.
+
+Generate a small example with two nuisance covariates, a binary exposure, and
+a count outcome:
+
+```{r data}
+set.seed(42)
+dat <- data.frame(z1 = rnorm(120), z2 = rnorm(120),
+                  x = rbinom(120, 1, 0.3))
+dat$y <- rpois(120, exp(0.3 + 0.2 * dat$z1 - 0.1 * dat$z2 + 0.2 * dat$x))
+```
+
+For a Poisson model with a log link, the working alternative adds an exposure
+coefficient to the linear predictor. The null hypothesis sets that coefficient
+to zero. The null formula `y ~ z1 + z2` therefore **excludes `x`** and includes
+the usual implicit intercept.
+
+```{r test}
+set.seed(2026)
+result <- perglm_test(
+  y ~ z1 + z2,
+  data = dat,
+  exposure = dat$x,
+  family = poisson(),
+  B = 999L
+)
+result
+result$p.value
+```
+
+The result is a standard R `htest` object. This example does not reject the
+null at the 5% level. No exposure coefficient estimate or confidence interval
+is calculated.
+
+`exposure` uses ordinary R evaluation: `dat$x` supplies the vector explicitly.
+Binary and continuous numeric exposures are supported. Values must follow the
+same row order as `data`; names, when present, must match the model row names.
+
+## Read the result
+
+The default alternative is `"two.sided"`. The alternatives `"greater"` and
+`"less"` refer to the exposure coefficient on the **link scale**. With the log
+link above, a positive coefficient increases the conditional mean. With a
+decreasing link, a positive coefficient lowers the conditional mean.
+
+```{r inspect}
+result$statistic
+c(nobs = result$nobs, B = result$B, exceedances = result$exceedances)
+result$null_diagnostics
+```
+
+The diagnostics describe null fitting and numerical checks; they do not verify
+the statistical assumptions. Conditional-mean validity requires a correct null
+mean model and the regularity conditions in the paper. The working outcome
+variance may be misspecified. This procedure does not test every possible form
+of conditional dependence.
+
+## Choose the permutation budget
+
+The p-value is `(1 + exceedances) / (B + 1)`, using inclusive tail comparisons.
+With `B = 999L`, the smallest attainable p-value is `0.001`. Larger budgets give
+finer resolution and require more computation. The null model is fitted once;
+each shuffle recomputes exposure residuals and their empirical score variance.
+
+Call `set.seed()` before testing to reproduce the permutation draws. The first
+seed above generates the example data; the second controls calibration.
+`batch_size` limits how many permutations are scored together and controls
+working memory. For successful runs, changing batching or retention settings
+preserves the result and final RNG state when the seed is unchanged.
+
+Set `keep_statistics = TRUE` to retain the sampled scores in
+`result$permuted_statistics`. By default, that field is `NULL`.
+
+## Supported models and guarded failures
+
+Working families include Gaussian, Bernoulli (`binomial`), Poisson, Gamma,
+inverse Gaussian, and negative binomial. Use `family = "negative.binomial"`
+to estimate a log-link model's size, or a `MASS::negative.binomial()` family
+object to specify a fixed size. Fixed offsets can appear in the null formula.
+
+Model observations must be complete, with unit prior weights and a full-rank
+nuisance design containing an intercept. Bernoulli outcomes must be coded zero
+or one; grouped binomial responses are unsupported. The model must have positive
+residual degrees of freedom and the exposure must retain variation after
+nuisance adjustment.
+
+The function stops without a p-value for unsupported fits, including Bernoulli
+separation and Gaussian residuals indistinguishable from fitting roundoff.
+Undefined observed or permuted scores also stop calibration; draws are never
+discarded or redrawn. Inspect the data and null model before continuing.
+
+```{r result-contract, include=FALSE}
+stopifnot(inherits(result, "htest"), result$nobs == nrow(dat),
+          result$B == 999L, is.finite(unname(result$statistic)),
+          result$p.value > 0, result$p.value <= 1,
+          is.null(result$permuted_statistics))
+```
+
+## Reference
+
+Ai, J. and Niu, Z. (2026). *Conditional independence testing through marginal
+permutation*. [arXiv:2611.03255](https://arxiv.org/abs/2611.03255).

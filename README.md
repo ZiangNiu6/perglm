@@ -38,6 +38,14 @@ the exposure coefficient on the link scale. Set `keep_statistics = TRUE` to
 retain the sampled scores in `result$permuted_statistics`. See `?perglm_test`
 for supported families, assumptions, and fitting controls.
 
+The getting-started vignette walks through this example and its output:
+
+```r
+vignette("getting-started", package = "perglm")
+```
+
+Its source is in [`vignettes/getting-started.Rmd`](vignettes/getting-started.Rmd).
+
 ## Validation
 
 The [validation report](validation/results/report.html) records a reproducible
@@ -47,6 +55,11 @@ ranged from 3.9% to 5.6%; all pointwise 95% binomial intervals included 5%.
 The study also records power, variance misspecification, and failures with rare
 exposures. Scripts, seeds, raw results, and exact small-sample checks are in
 `validation/`.
+
+The saved validation report records implementation checkpoint
+[`27801a8`](https://github.com/ZiangNiu6/perglm/commit/27801a8).
+Reanalyze the saved results from that checkout, or rerun the validation scripts
+to record a fresh source snapshot after further changes.
 
 Null preparation checks Bernoulli nuisance designs for separation and Gaussian
 residuals for numerical resolution. These checks run once per null fit and
