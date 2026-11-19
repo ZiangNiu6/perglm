@@ -2,6 +2,7 @@
 
 #include <R_ext/BLAS.h>
 
+#include <algorithm>
 #include <cmath>
 #include <vector>
 
@@ -19,6 +20,30 @@ const char* residual_error =
   "score_residuals must be a finite real numeric vector with one value per design row.";
 const char* contribution_error =
   "Residualized score contributions must be finite.";
+const char* alias_error =
+  "exposure has no numerically identifiable variation after nuisance adjustment.";
+
+void check_exposure_tolerance(const double tolerance, const Rcpp::NumericMatrix& z) {
+  if (!std::isfinite(tolerance) || tolerance < 0 || tolerance >= 1) {
+    Rcpp::stop("exposure_tol must be finite, at least zero and less than one.");
+  }
+  if (tolerance > 0) {
+    // Centering an exposure is valid only when an intercept is in the design.
+    for (int j = 0; j < z.ncol(); ++j) {
+      bool intercept = true;
+      for (int i = 0; i < z.nrow(); ++i) {
+        if (z(i, j) != 1) {
+          intercept = false;
+          break;
+        }
+      }
+      if (intercept) {
+        return;
+      }
+    }
+    Rcpp::stop("An intercept is required when exposure_tol is positive.");
+  }
+}
 
 bool numeric_matrix(SEXP value) {
   return perglm::is_real_numeric(value) && Rf_isMatrix(value);
@@ -132,9 +157,12 @@ class ScoreWorkspace {
     beta(projection.p), contributions(projection.n) {}
 
   double compute(const Projection& projection, const double* exposure,
-                 const double* score_residuals, const char* invalid_error) {
+                 const double* score_residuals, const char* invalid_error,
+                 const double exposure_tol) {
     const int n = projection.n;
     const int p = projection.p;
+    double minimum = exposure[0];
+    double maximum = exposure[0];
     for (int i = 0; i < n; ++i) {
       if (i > 0 && (i & 65535) == 0) {
         Rcpp::checkUserInterrupt();
@@ -142,8 +170,27 @@ class ScoreWorkspace {
       if (!std::isfinite(exposure[i])) {
         Rcpp::stop(invalid_error);
       }
-      weighted[i] = projection.sqrt_weights[i] * exposure[i];
-      contributions[i] = exposure[i];
+      minimum = std::min(minimum, exposure[i]);
+      maximum = std::max(maximum, exposure[i]);
+    }
+    const double range = maximum - minimum;
+    const double scale = std::max(std::abs(minimum), std::abs(maximum));
+    if (exposure_tol > 0 && minimum == maximum) {
+      Rcpp::stop(alias_error);
+    }
+    for (int i = 0; i < n; ++i) {
+      double value = exposure[i];
+      if (exposure_tol > 0) {
+        // A positive affine transformation leaves the studentized score
+        // unchanged with an intercept. Subtract before scaling to retain
+        // variation in exposures with a large common offset. Min/max are
+        // unchanged by permutations, so the same labels get the same values.
+        value = std::isfinite(range) ? (value - minimum) / range - 0.5 :
+          (value / scale - minimum / scale) /
+            (maximum / scale - minimum / scale) - 0.5;
+      }
+      weighted[i] = projection.sqrt_weights[i] * value;
+      contributions[i] = value;
       if (!std::isfinite(weighted[i])) {
         Rcpp::stop("Exposure residualization produced nonfinite values.");
       }
@@ -153,6 +200,8 @@ class ScoreWorkspace {
     const double zero = 0;
     const double negative_one = -1;
     const int increment = 1;
+    const double exposure_norm = exposure_tol > 0 ?
+      F77_CALL(dnrm2)(&n, weighted.data(), &increment) : 0;
     // Q and R describe sqrt(W) Z[, pivot]. No factorization is repeated.
     F77_CALL(dgemv)("T", &n, &p, &one, projection.q.begin(), &n,
                     weighted.data(), &increment, &zero, coefficients.data(),
@@ -172,6 +221,16 @@ class ScoreWorkspace {
       if (!std::isfinite(contributions[i])) {
         Rcpp::stop("Exposure residualization produced nonfinite values.");
       }
+      if (exposure_tol > 0) {
+        weighted[i] = projection.sqrt_weights[i] * contributions[i];
+      }
+    }
+    if (exposure_tol > 0 &&
+        (exposure_norm == 0 || F77_CALL(dnrm2)(&n, weighted.data(), &increment) <=
+          exposure_tol * exposure_norm)) {
+      Rcpp::stop(alias_error);
+    }
+    for (int i = 0; i < n; ++i) {
       contributions[i] *= score_residuals[i];
     }
     return perglm::studentize_column(contributions.data(), n,
@@ -188,10 +247,13 @@ class ScoreWorkspace {
 }  // namespace
 
 // Residualize one exposure and studentize its product with fixed score residuals.
+// Positive exposure_tol enables GLM identifiability checks and normalization;
+// the default retains the general projection primitive without centering.
 // [[Rcpp::export(rng = false)]]
 double residualized_score_cpp(SEXP projection, SEXP exposure,
-                             SEXP score_residuals) {
+                             SEXP score_residuals, double exposure_tol = 0) {
   Projection factors(projection);
+  check_exposure_tolerance(exposure_tol, factors.z);
   if (!numeric_vector(exposure, factors.n)) {
     Rcpp::stop(exposure_error);
   }
@@ -203,15 +265,17 @@ double residualized_score_cpp(SEXP projection, SEXP exposure,
   require_finite(REAL(numeric_residuals), factors.n, residual_error);
   ScoreWorkspace workspace(factors);
   return workspace.compute(factors, REAL(numeric_exposure),
-                            REAL(numeric_residuals), exposure_error);
+                            REAL(numeric_residuals), exposure_error, exposure_tol);
 }
 
 // Process a block using fixed factors/residuals and reusable column workspaces.
 // [[Rcpp::export(rng = false)]]
 Rcpp::NumericVector residualized_score_batch_cpp(SEXP projection,
                                                 SEXP exposures,
-                                                SEXP score_residuals) {
+                                                SEXP score_residuals,
+                                                double exposure_tol = 0) {
   Projection factors(projection);
+  check_exposure_tolerance(exposure_tol, factors.z);
   if (!numeric_matrix(exposures)) {
     Rcpp::stop(exposures_error);
   }
@@ -236,7 +300,8 @@ Rcpp::NumericVector residualized_score_batch_cpp(SEXP projection,
     }
     try {
       result[column] = workspace.compute(factors, values + column * n,
-                                         REAL(numeric_residuals), exposures_error);
+                                         REAL(numeric_residuals), exposures_error,
+                                         exposure_tol);
     } catch (const Rcpp::exception& error) {
       Rcpp::stop("Column %lld: %s", static_cast<long long>(column + 1), error.what());
     }

@@ -31,8 +31,20 @@ nuisance design containing an intercept.
 
 Rcpp kernels support scalar and batch studentization, as well as combined
 exposure residualization and score calculation, alongside an R reference
-implementation. The public GLM score-test interface and permutation engines are
-under development.
+implementation. Three additional internal helpers now provide:
+
+- `glm_score_statistic()`: the observed score, with exposure alignment and
+  residual-identifiability checks.
+- `permutation_p_value()`: inclusive one- or two-sided tail comparisons with
+  the plus-one correction.
+- `calibrate_glm_permutation()`: fixed-budget label permutation using the
+  cached null fit and bounded Rcpp batches. `set.seed()` controls the draws;
+  retaining the permuted statistics is optional.
+
+Each shuffle recomputes exposure residuals and empirical score variance.
+Nonidentifiable exposures and undefined scores stop calibration without a
+p-value; no draws are discarded or redrawn. The public GLM score-test interface
+is under development.
 
 The package layout includes R code in `R/`, native code reserved for `src/`,
 documentation in `man/`, tests in `tests/`, and pkgdown configuration for a future

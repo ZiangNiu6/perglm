@@ -11,26 +11,28 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // residualized_score_cpp
-double residualized_score_cpp(SEXP projection, SEXP exposure, SEXP score_residuals);
-RcppExport SEXP _perglm_residualized_score_cpp(SEXP projectionSEXP, SEXP exposureSEXP, SEXP score_residualsSEXP) {
+double residualized_score_cpp(SEXP projection, SEXP exposure, SEXP score_residuals, double exposure_tol);
+RcppExport SEXP _perglm_residualized_score_cpp(SEXP projectionSEXP, SEXP exposureSEXP, SEXP score_residualsSEXP, SEXP exposure_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type projection(projectionSEXP);
     Rcpp::traits::input_parameter< SEXP >::type exposure(exposureSEXP);
     Rcpp::traits::input_parameter< SEXP >::type score_residuals(score_residualsSEXP);
-    rcpp_result_gen = Rcpp::wrap(residualized_score_cpp(projection, exposure, score_residuals));
+    Rcpp::traits::input_parameter< double >::type exposure_tol(exposure_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(residualized_score_cpp(projection, exposure, score_residuals, exposure_tol));
     return rcpp_result_gen;
 END_RCPP
 }
 // residualized_score_batch_cpp
-Rcpp::NumericVector residualized_score_batch_cpp(SEXP projection, SEXP exposures, SEXP score_residuals);
-RcppExport SEXP _perglm_residualized_score_batch_cpp(SEXP projectionSEXP, SEXP exposuresSEXP, SEXP score_residualsSEXP) {
+Rcpp::NumericVector residualized_score_batch_cpp(SEXP projection, SEXP exposures, SEXP score_residuals, double exposure_tol);
+RcppExport SEXP _perglm_residualized_score_batch_cpp(SEXP projectionSEXP, SEXP exposuresSEXP, SEXP score_residualsSEXP, SEXP exposure_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type projection(projectionSEXP);
     Rcpp::traits::input_parameter< SEXP >::type exposures(exposuresSEXP);
     Rcpp::traits::input_parameter< SEXP >::type score_residuals(score_residualsSEXP);
-    rcpp_result_gen = Rcpp::wrap(residualized_score_batch_cpp(projection, exposures, score_residuals));
+    Rcpp::traits::input_parameter< double >::type exposure_tol(exposure_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(residualized_score_batch_cpp(projection, exposures, score_residuals, exposure_tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -56,8 +58,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_perglm_residualized_score_cpp", (DL_FUNC) &_perglm_residualized_score_cpp, 3},
-    {"_perglm_residualized_score_batch_cpp", (DL_FUNC) &_perglm_residualized_score_batch_cpp, 3},
+    {"_perglm_residualized_score_cpp", (DL_FUNC) &_perglm_residualized_score_cpp, 4},
+    {"_perglm_residualized_score_batch_cpp", (DL_FUNC) &_perglm_residualized_score_batch_cpp, 4},
     {"_perglm_studentize_score_cpp", (DL_FUNC) &_perglm_studentize_score_cpp, 1},
     {"_perglm_studentize_score_batch_cpp", (DL_FUNC) &_perglm_studentize_score_batch_cpp, 1},
     {NULL, NULL, 0}

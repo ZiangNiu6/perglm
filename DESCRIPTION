@@ -8,8 +8,9 @@ Description:
     Package infrastructure for permutation-calibrated, empirically studentized
     score tests in generalized linear models, following Ai and Niu (2026)
     <doi:10.48550/arXiv.2611.03255>. This development version provides internal
-    null-model fitting, score preparation, and numerical helpers; the public
-    testing interface is under development.
+    null-model fitting, score preparation, and fixed-budget permutation
+    calibration with compiled numerical kernels; the public testing interface
+    is under development.
 URL: https://github.com/ZiangNiu6/perglm
 BugReports: https://github.com/ZiangNiu6/perglm/issues
 License: GPL (>= 3)

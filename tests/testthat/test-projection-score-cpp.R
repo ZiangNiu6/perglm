@@ -140,3 +140,30 @@ test_that("fused kernels reject nonfinite products and preserve RNG state", {
                                 c(1, 2, 3, 4))
   expect_identical(.Random.seed, before)
 })
+
+test_that("opt-in exposure checks agree in scalar and batch kernels", {
+  z <- cbind(1, c(-2, -1, 0, 1, 2, 3))
+  projection <- prepare_projection(z, c(0.2, 1, 4, 0.5, 2, 3))
+  exposures <- cbind(binary = c(0, 1, 0, 0, 1, 0),
+                     continuous = c(2, -3, 1, 5, 0, 4))
+  epsilon <- c(-2, 0.5, 1, -1.5, 2, 0.75)
+  individual <- vapply(seq_len(ncol(exposures)), function(j) {
+    residualized_score_cpp(projection, exposures[, j], epsilon,
+                           exposure_tol = 1e-7)
+  }, numeric(1))
+  batch <- residualized_score_batch_cpp(projection, exposures, epsilon,
+                                         exposure_tol = 1e-7)
+  expect_identical(unname(batch), individual)
+  expect_equal(batch, residualized_score_batch_cpp(projection, exposures, epsilon),
+               tolerance = 1e-11)
+  expect_error(residualized_score_batch_cpp(
+    projection, cbind(exposures, alias = z[, 2L]), epsilon, exposure_tol = 1e-7
+  ), "Column 3:.*identifiable variation")
+  for (tol in c(-1, 1, NA_real_, Inf)) {
+    expect_error(residualized_score_cpp(projection, exposures[, 1L], epsilon,
+                                        exposure_tol = tol), "exposure_tol must")
+  }
+  no_intercept <- prepare_projection(matrix(z[, 2L], ncol = 1L), rep(1, 6))
+  expect_error(residualized_score_cpp(no_intercept, exposures[, 1L], epsilon,
+                                      exposure_tol = 1e-7), "intercept is required")
+})
