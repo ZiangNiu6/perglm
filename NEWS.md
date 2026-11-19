@@ -18,4 +18,6 @@
   permutations.
 * Add an executable getting-started vignette, a package website, installation
   instructions, and citations for the method and software.
-* Add GitHub Actions checks on Linux, macOS, and Windows, including vignettes.
+* Add GitHub Actions checks on Linux, macOS, and Windows, including vignettes
+  and the minimum supported R version, 4.1.0.
+* Require testthat 3.1.7 or later for the namespace mocking used by the tests.

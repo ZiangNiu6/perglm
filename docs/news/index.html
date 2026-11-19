@@ -40,7 +40,8 @@
 <li>Fit the nuisance-only null model once and reuse score quantities and QR factors. Use compiled C++ kernels and bounded batches for permutation scoring.</li>
 <li>Require complete observations, unit prior weights, a full-rank nuisance design with an intercept, and identifiable exposure variation. Check null-model convergence and empirical score variance. Reject separated Bernoulli fits and Gaussian fits with residuals indistinguishable from numerical roundoff. Undefined sampled scores stop the test without discarding or redrawing permutations.</li>
 <li>Add an executable getting-started vignette, a package website, installation instructions, and citations for the method and software.</li>
-<li>Add GitHub Actions checks on Linux, macOS, and Windows, including vignettes.</li>
+<li>Add GitHub Actions checks on Linux, macOS, and Windows, including vignettes and the minimum supported R version, 4.1.0.</li>
+<li>Require testthat 3.1.7 or later for the namespace mocking used by the tests.</li>
 </ul></div>
   </main></div>
 

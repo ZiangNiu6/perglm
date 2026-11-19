@@ -69,7 +69,7 @@
 <p>perglm requires R 4.1.0 or later. Install the GitHub version with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span> <span class="co"># Run once if remotes is not installed</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ZiangNiu6/perglm"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ZiangNiu6/perglm"</span><span class="op">)</span></span></code></pre></div>
 <p>Installing from GitHub compiles the package’s C++ code. Set up the build tools for your platform before installing:</p>
 <ul>
 <li>
@@ -79,7 +79,7 @@
 <li>
 <strong>Linux:</strong> R development headers and a C++ compiler, typically provided by your distribution’s R development tools.</li>
 </ul>
-<p>Dependencies are installed automatically. While the repository is private, GitHub authentication and repository access are required; see the <a href="https://remotes.r-lib.org/reference/install_github.html#arguments" class="external-link">remotes authentication instructions</a>.</p>
+<p>Dependencies are installed automatically.</p>
 <p>The default GitHub installation skips local vignettes. The <a href="https://ziangniu6.github.io/perglm/articles/getting-started.html">online getting-started tutorial</a> is available without building them.</p>
 </div>
 <div class="section level2">
