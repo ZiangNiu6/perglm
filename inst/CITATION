@@ -1,0 +1,20 @@
+citHeader("To cite perglm and its underlying method in publications, use:")
+
+# Use installed metadata, with the initial development year as a fallback until
+# a release/publication date is recorded in DESCRIPTION.
+software_meta <- meta
+software_dates <- c(meta[["Date/Publication"]], meta[["Date"]])
+if (!length(software_dates) || all(is.na(software_dates) | !nzchar(software_dates))) {
+  software_meta[["Date/Publication"]] <- "2026"
+}
+citation(auto = software_meta)
+
+bibentry(
+  bibtype = "Misc",
+  title = "Conditional independence testing through marginal permutation",
+  author = c(person("Jiahao", "Ai"), person("Ziang", "Niu")),
+  year = "2026",
+  howpublished = "arXiv preprint arXiv:2611.03255 [stat.ME]",
+  doi = "10.48550/arXiv.2611.03255",
+  url = "https://arxiv.org/abs/2611.03255"
+)

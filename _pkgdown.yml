@@ -5,7 +5,7 @@ template:
 
 navbar:
   structure:
-    left: [getting-started, reference]
+    left: [getting-started, reference, news]
     right: [search, github]
   components:
     getting-started:
